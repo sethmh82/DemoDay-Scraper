@@ -85,8 +85,6 @@ var scrape = function (cb, wpcb) {
 
     var $ = cheerio.load(body);
 
-    console.log($);
-
     var articles = [];
     var wpArticles = [];
 
@@ -124,18 +122,19 @@ var scrape = function (cb, wpcb) {
         // NORMALIZE BILLION
         if (sumNeat.includes("bn") && sumNeat.includes("$") && sumNeat.includes(",")) {
           var sum1 = sumNeat.replace("bn", "");
-          console.log(sum1); // $10,982.83
+         // console.log(sum1); // $10,982.83
           var sumD1 = sum1.replace(".", "");
-          console.log(sumD1); // $10,98283
+        //  console.log(sumD1); // $10,98283
           var sumD = sumD1.replace(",", ".");
-          console.log(sumD); // $10.98283
+       //   console.log(sumD); // $10.98283
           var sumS = sumD.replace("$", "");
-          console.log(sumS); // 10.98283
+       //   console.log(sumS); // 10.98283
           var sum2 = parseFloat(Math.round(sumS * 1000000000)).toFixed(0).toString();
-          console.log(sum2); // 10982830000
+       //   console.log(sum2); // 10982830000
           var sum3 = sum2.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           console.log(sum3); // 10,982,830,000
 
+          console.log(sumNeat); 
           // TO MONGO DB
           var dataToAdd = {
             headline: headNeat,
@@ -144,6 +143,9 @@ var scrape = function (cb, wpcb) {
 
            // TO WORDPRESS
           var wpDataToAdd = ("<tr><td>" + headNeat + "</td><td>" + "$ " + sum3 + "</td></tr>");
+
+        wpArticles.push(wpDataToAdd);
+        articles.push(dataToAdd);
 
         } // END IF
         ///////////////////////////////////////
@@ -186,14 +188,18 @@ var scrape = function (cb, wpcb) {
             summary: sumNeat
           };
           var wpDataToAdd = ("<tr><td>" + headNeat + "</td><td>" + sumNeat + "</td></tr>");
+
+        wpArticles.push(wpDataToAdd);
+        articles.push(dataToAdd);
+
+
         } // END IF
         ///////////////////////////////////////
 
 
         } // END (header && desc) IF
 
-        wpArticles.push(wpDataToAdd);
-        articles.push(dataToAdd);
+    
 
     }); // COMPLETE $(".topfactBox__factWrapper")
 
@@ -209,7 +215,7 @@ var scrape = function (cb, wpcb) {
       content: "<table>" + finalWP + "</table>",
       status: "draft",
       termNames: {
-        "category": ["Finacnial"],
+        "category": "Finacnial",
         "post_tag": ["Financial, China"]
       }
     }, function (error, data) {
