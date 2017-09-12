@@ -45,8 +45,8 @@ client.newPost({
 var wordpress = require("wordpress");
 var client = wordpress.createClient({
   url: "setheditor.com",
-  username: "seth",
-  password: "Aqr!098#"
+  username: "admin",
+  password: "pass"
 });
 
 
